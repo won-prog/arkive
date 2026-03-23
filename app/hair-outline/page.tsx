@@ -7,8 +7,8 @@ const MODEL_URL =
 const WASM_BASE = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.33/wasm";
 const BUNDLE_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.33/vision_bundle.mjs";
 const HAIR_CLASS_ID = 1;
-const BLEACH_BASE_ALPHA = 0.18;
-const DYE_BASE_ALPHA = 0.28;
+const BLEACH_BASE_ALPHA = 0.28;
+const DYE_BASE_ALPHA = 0.48;
 
 type ColorPreset = {
   name: string;
@@ -26,6 +26,7 @@ const COLOR_PRESETS: ColorPreset[] = [
   { name: "Espresso", hex: "#2F201C", mode: "dye" },
   { name: "Surreal Bronde", hex: "#9B7E63", mode: "bleach" }
 ];
+const DEFAULT_PRESET = COLOR_PRESETS[3];
 
 type SegmenterLike = {
   close: () => void;
@@ -49,8 +50,8 @@ export default function HairOutlinePage() {
   const frameRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const segmenterRef = useRef<SegmenterLike | null>(null);
-  const selectedRef = useRef<ColorPreset>(COLOR_PRESETS[0]);
-  const strengthRef = useRef(45);
+  const selectedRef = useRef<ColorPreset>(DEFAULT_PRESET);
+  const strengthRef = useRef(60);
   const bleachPassRef = useRef<1 | 2 | 3>(1);
   const rootMixRef = useRef(55);
   const midMixRef = useRef(85);
@@ -60,8 +61,8 @@ export default function HairOutlinePage() {
   const [running, setRunning] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<ColorPreset>(COLOR_PRESETS[0]);
-  const [strength, setStrength] = useState(45);
+  const [selected, setSelected] = useState<ColorPreset>(DEFAULT_PRESET);
+  const [strength, setStrength] = useState(60);
   const [bleachPass, setBleachPass] = useState<1 | 2 | 3>(1);
   const [rootMix, setRootMix] = useState(55);
   const [midMix, setMidMix] = useState(85);
@@ -167,16 +168,16 @@ export default function HairOutlinePage() {
     (base: Hsl, target: Hsl, mode: ColorPreset["mode"], applied: number): Hsl => {
       if (mode === "bleach") {
         return {
-          h: lerp(base.h, target.h, 0.18 * applied),
-          s: clamp01(base.s * (1 - 0.55 * applied) + target.s * (0.15 * applied)),
-          l: clamp01(base.l + (0.2 + target.l * 0.16) * applied)
+          h: lerp(base.h, target.h, 0.22 * applied),
+          s: clamp01(base.s * (1 - 0.62 * applied) + target.s * (0.22 * applied)),
+          l: clamp01(base.l + (0.26 + target.l * 0.2) * applied)
         };
       }
 
       return {
-        h: lerp(base.h, target.h, 0.74 * applied),
-        s: clamp01(base.s * (1 - 0.24 * applied) + target.s * (0.88 * applied)),
-        l: clamp01(base.l * (1 - 0.15 * applied) + target.l * (0.15 * applied))
+        h: lerp(base.h, target.h, 0.92 * applied),
+        s: clamp01(base.s * (1 - 0.16 * applied) + target.s * (1.05 * applied)),
+        l: clamp01(base.l * (1 - 0.2 * applied) + target.l * (0.2 * applied))
       };
     },
     [clamp01, lerp]
@@ -525,7 +526,7 @@ export default function HairOutlinePage() {
 
         <label className="strength-row">
           <span>강도: {strength}%</span>
-          <input type="range" min={8} max={70} value={strength} onChange={(e) => setStrength(Number(e.target.value))} />
+          <input type="range" min={20} max={95} value={strength} onChange={(e) => setStrength(Number(e.target.value))} />
         </label>
         <label className="strength-row">
           <span>뿌리 강도: {rootMix}%</span>
