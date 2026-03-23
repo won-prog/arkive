@@ -1,0 +1,25 @@
+{
+  "name": "week1-internal-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mediapipe/face_detection": "^0.4.1646425229",
+    "@mediapipe/selfie_segmentation": "^0.1.1675465747",
+    "@mediapipe/tasks-vision": "^0.10.33",
+    "next": "15.2.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.5",
+    "typescript": "5.8.2"
+  }
+}
